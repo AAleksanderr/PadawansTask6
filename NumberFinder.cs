@@ -6,25 +6,20 @@ namespace PadawansTask6
     {
         public static int? NextBiggerThan(int number)
         {
+            if (number < 0) throw new ArgumentException();
             char[] chars = number.ToString().ToCharArray();
-            char[] sortedChars = new char[chars.Length];
-            char[] tmpChars = new char[chars.Length];
-            Array.Copy(chars, sortedChars, chars.Length);
-            Array.Sort(sortedChars);
-            for (int i = number + 1; i < Math.Pow(10, chars.Length); i++)
+            for (int i = chars.Length - 2; i >= 0; i--)
+            for (int j = chars.Length - 1; j > i; j--)
             {
-                Array.Copy(i.ToString().ToCharArray(), tmpChars, chars.Length);
-                Array.Sort(tmpChars);
-                //if (sortedChars.SequenceEqual(tmpChars)) return i; (LINQ)
-                var flag = true;
-                for (int k = 0; k < chars.Length; k++)
-                    if (sortedChars[k] != tmpChars[k])
-                    {
-                        flag = false;
-                        break;
-                    }
-
-                if (flag) return i;
+                if (chars[i] < chars[j])
+                {
+                    var k = chars[i];
+                    chars[i] = chars[j];
+                    chars[j] = k;
+                    Array.Sort(chars, i + 1, chars.Length - i - 1);
+                    if (Convert.ToInt64(new string(chars)) > Int32.MaxValue) return null;
+                    return Convert.ToInt32(new string(chars));
+                }
             }
 
             return null;
